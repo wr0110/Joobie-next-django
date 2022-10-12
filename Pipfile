@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+boto3 = "*"
+django-cors-headers = "*"
+django-dotenv = "*"
+django-filter = "*"
+django-storages = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+geocoder = "*"
+gunicorn = "*"
+whitenoise = "*"
+install = "*"
+psycopg2 = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
