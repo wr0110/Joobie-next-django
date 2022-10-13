@@ -16,6 +16,7 @@ gunicorn = "*"
 whitenoise = "*"
 install = "*"
 psycopg2 = "*"
+markdown = "*"
 
 [dev-packages]
 
