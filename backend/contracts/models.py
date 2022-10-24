@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.conf import settings
 from datetime import datetime
+from django.contrib.auth.models import User
 
 NETWORK_CHOICES = (
     ('ethmain','Ethereum (ETH)'),
@@ -11,8 +11,9 @@ NETWORK_CHOICES = (
 # Create your models here.
 class Contract(models.Model):
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
+        null=True
     )
     network = models.CharField(max_length=7, choices=NETWORK_CHOICES, default='goerli')
     name = models.CharField(max_length=30)

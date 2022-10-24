@@ -1,60 +1,70 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+from django.db.models import Avg, Min, Max, Count
 
-from .models import Contract
 from .serializers import ContractSerializer
+from .models import Contract
+
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
 @api_view(['GET'])
-def apiOverview(request):
-    api_urls = {
-        'List':'/contract-list',
-        'Detail View':'task-detail/<str:pk>/',
-        'Create':'/contract-create/',
-        'Update':'/contract-update/<str:pk>/',
-        'Delete':'/contract-delete/<str:pk>/',
-    }
+def getAllContracts(request):
 
-    return Response(api_urls)
-
-@api_view(['GET'])
-def contractList(request):
     contracts = Contract.objects.all()
+
     serializer = ContractSerializer(contracts, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
-def contractDetail(request, pk):
-    contracts = Contract.objects.get(id=pk)
-    serializer = ContractSerializer(contracts, many=False)
+def getContract(request, pk):
+    contract = get_object_or_404(Contract, id=pk)
+
+    serializer = ContractSerializer(contract, many=False)
+
     return Response(serializer.data)
+
 
 @api_view(['POST'])
-def contractCreate(request):
-    serializer = ContractSerializer(data=request.data)
+def newContract(request):
+    data = request.data
 
-    if serializer.is_valid():
-        serializer.save()
+    contract = Contract.objects.create(**data)
+
+    serializer = ContractSerializer(contract, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+def updateContract(request, pk):
+    contract = get_object_or_404(Contract, id=pk)
+
+    contract.owner = request.data['owner']
+    contract.network = request.data['network']
+    contract.name = request.data['name']
+    contract.symbol = request.data['symbol']
+    contract.second_mint_price = request.data['second_mint_price']
+    contract.supply = request.data['supply']
+    contract.royalty_rate = request.data['royalty_rate']
+    contract.whitelist = request.data['whitelist']
+    contract.created_on = request.data['created_on']
+
+
+    contract.save()
+
+    serializer = ContractSerializer(contract, many=False)
 
     return Response(serializer.data)
 
-@api_view(['POST'])
-def contractUpdate(request, pk):
-    contract = Contract.objects.get(id=pk)
-    serializer = ContractSerializer(instance=contract, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        
-    return Response(serializer.data)
 
 @api_view(['DELETE'])
-def contractDelete(request, pk):
-    contract = Contract.objects.get(id=pk)
+def deleteContract(request, pk):
+    contract = get_object_or_404(Contract, id=pk)
+
     contract.delete()
-        
-    return Response('Contract successfully deleted')
+
+    return Response({ 'message': 'Contract is Deleted.' }, status=status.HTTP_200_OK)

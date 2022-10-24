@@ -10,13 +10,13 @@ django-dotenv = "*"
 django-filter = "*"
 django-storages = "*"
 djangorestframework = "*"
-djangorestframework-simplejwt = "*"
 geocoder = "*"
 gunicorn = "*"
 whitenoise = "*"
 install = "*"
 psycopg2 = "*"
 markdown = "*"
+pyjwt = "*"
 
 [dev-packages]
 
