@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import ContractSerializer
 from .models import Contract
@@ -13,9 +15,10 @@ from .filters import ContractsFilter
 # Create your views here.
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getAllContracts(request):
 
-    filterset = ContractsFilter(request.GET, queryset=Contract.objects.all().order_by('id'))
+    filterset = ContractsFilter(request.GET, queryset=Contract.objects.filter(owner=request.user).order_by('id'))
 
     count = filterset.qs.count()
 
@@ -37,16 +40,22 @@ def getAllContracts(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getContract(request, pk):
     contract = get_object_or_404(Contract, id=pk)
+
+    if contract.owner != request.user:
+        return Response({ 'message': 'You cannot view this contract' }, status=status.HTTP_403_FORBIDDEN)
 
     serializer = ContractSerializer(contract, many=False)
 
     return Response(serializer.data)
 
-
+#check not receiving anonymous users
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def newContract(request):
+    request.data['owner'] = request.user
     data = request.data
 
     contract = Contract.objects.create(**data)
@@ -55,11 +64,15 @@ def newContract(request):
     return Response(serializer.data)
 
 
+#should only be able to update logo, background color once contract published, not other fields
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def updateContract(request, pk):
     contract = get_object_or_404(Contract, id=pk)
 
-    contract.owner = request.data['owner']
+    if contract.owner != request.user:
+        return Response({ 'message': 'You cannot update this contract' }, status=status.HTTP_403_FORBIDDEN)
+
     contract.network = request.data['network']
     contract.name = request.data['name']
     contract.symbol = request.data['symbol']
@@ -78,8 +91,12 @@ def updateContract(request, pk):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def deleteContract(request, pk):
     contract = get_object_or_404(Contract, id=pk)
+
+    if contract.owner != request.user:
+        return Response({ 'message': 'You cannot delete this contract' }, status=status.HTTP_403_FORBIDDEN)
 
     contract.delete()
 

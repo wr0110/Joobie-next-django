@@ -16,7 +16,7 @@ whitenoise = "*"
 install = "*"
 psycopg2 = "*"
 markdown = "*"
-pyjwt = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
