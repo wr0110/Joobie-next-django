@@ -6,13 +6,13 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"
 
-const Layout = ({ children, title = "Find you Job Now" }) => {
+const Layout = ({ children, title = "Jobbee - Find you Job Now" }) => {
   return (
     <div>
       <Head>
-        <title>{title} - Jobbee</title>
+        <title>{title}</title>
       </Head>
 
       <Script
@@ -34,7 +34,6 @@ const Layout = ({ children, title = "Find you Job Now" }) => {
       ></Script>
 
       <ToastContainer position="bottom-right" />
-
       <Header />
       {children}
       <Footer />
