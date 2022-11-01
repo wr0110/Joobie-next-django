@@ -1,10 +1,13 @@
 import '../styles/globals.css'
 import { AuthProvider } from "../context/AuthContext";
+import { ContractProvider } from "../context/ContractContext";
 
 function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
-      <Component {...pageProps} />
+      <ContractProvider>
+        <Component {...pageProps} />
+      </ContractProvider>
     </AuthProvider>
   );
 }

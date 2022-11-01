@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 NETWORK_CHOICES = (
     ('ethmain','Ethereum (ETH)'),
@@ -27,4 +28,6 @@ class Contract(models.Model):
     )
     royalty_rate = models.DecimalField(max_digits=4, decimal_places=2)
     whitelist = models.BooleanField()
-    created_on = models.DateTimeField(default=datetime.now)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    

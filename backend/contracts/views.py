@@ -80,8 +80,6 @@ def updateContract(request, pk):
     contract.supply = request.data['supply']
     contract.royalty_rate = request.data['royalty_rate']
     contract.whitelist = request.data['whitelist']
-    contract.created_on = request.data['created_on']
-
 
     contract.save()
 
